@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Mes Dépenses</h2>
+
+<!-- Bouton pour créer une nouvelle dépense -->
+<div class="actions mb-3">
+    <a href="/depenses/create" class="btn btn-primary">➕ Nouvelle Dépense</a>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <div>
+            <div class="card-title">Suivi de mes opérations</div>
+            <div class="card-subtitle">Statut, facture et validation multi-niveaux</div>
+        </div>
+    </div>
+
+    {% if depenses|length == 0 %}
+        <p>Vous n’avez enregistré aucune dépense pour le moment.</p>
+    {% else %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Description</th>
+                    <th>Montant</th>
+                    <th>Statut</th>
+                    <th>Facture</th>
+                    <th>Commentaire</th>
+                    <th>Date validation</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for d in depenses %}
+                <tr>
+                    <td>{{ d.id }}</td>
+                    <td>{{ d.description }}</td>
+                    <td>{{ d.montant }} FCFA</td>
+
+                    <td>
+                        {% if d.statut == "en_attente" %}
+                            <span class="badge yellow">En attente</span>
+                        {% elif d.statut == "validé_controleur" %}
+                            <span class="badge green">Validée par Contrôleur</span>
+                        {% elif d.statut == "rejeté_controleur" %}
+                            <span class="badge red">Rejetée par Contrôleur</span>
+                        {% elif d.statut == "approuvé_admin" %}
+                            <span class="badge green">Approuvée par Admin</span>
+                        {% elif d.statut == "rejeté_admin" %}
+                            <span class="badge red">Rejetée par Admin</span>
+                        {% else %}
+                            <span class="badge grey">Statut inconnu</span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {% if d.facture %}
+                            <a href="/uploads/{{ d.facture.fichier | replace('app/uploads/', '') }}" target="_blank">Voir facture</a>
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+
+                    <td>{{ d.commentaire_controleur or "-" }}</td>
+                    <td>{{ d.date_validation or "-" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</div>
+
+{% endblock %}

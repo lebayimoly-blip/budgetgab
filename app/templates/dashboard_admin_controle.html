@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Contrôle des Dépenses – Administrateur</h2>
+
+<div class="tabs">
+    <button class="tab-button" onclick="openTab('attente')">🕒 En attente</button>
+    <button class="tab-button" onclick="openTab('validees')">✔️ Validées</button>
+    <button class="tab-button" onclick="openTab('rejetees')">❌ Rejetées</button>
+</div>
+
+<!-- ONGLET 1 : EN ATTENTE -->
+<div id="attente" class="tab-content">
+    <h3>Dépenses en attente</h3>
+
+    {% if en_attente|length == 0 %}
+        <p>Aucune dépense en attente.</p>
+    {% else %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Description</th>
+                    <th>Montant</th>
+                    <th>Facture</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for d in en_attente %}
+                <tr>
+                    <td>{{ d.id }}</td>
+                    <td>{{ d.description }}</td>
+                    <td>{{ d.montant }} FCFA</td>
+                    <td>
+                        {% if d.facture %}
+                            <a href="/uploads/{{ d.facture.fichier | replace('app/uploads/', '') }}" target="_blank">Voir</a>
+                        {% else %}-{% endif %}
+                    </td>
+                    <td>
+                        <form action="/depenses/valider/{{ d.id }}" method="post" style="display:inline;">
+                            <input type="text" name="commentaire" placeholder="Commentaire admin" />
+                            <button class="btn btn-success">Valider</button>
+                        </form>
+
+                        <form action="/depenses/rejeter/{{ d.id }}" method="post" style="display:inline;">
+                            <input type="text" name="commentaire" placeholder="Motif du rejet" required />
+                            <button class="btn btn-danger">Rejeter</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</div>
+
+<!-- ONGLET 2 : VALIDÉES -->
+<div id="validees" class="tab-content" style="display:none;">
+    <h3>Dépenses validées</h3>
+
+    {% if validees|length == 0 %}
+        <p>Aucune dépense validée.</p>
+    {% else %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Description</th>
+                    <th>Montant</th>
+                    <th>Statut</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for d in validees %}
+                <tr>
+                    <td>{{ d.id }}</td>
+                    <td>{{ d.description }}</td>
+                    <td>{{ d.montant }} FCFA</td>
+                    <td>{{ d.statut }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</div>
+
+<!-- ONGLET 3 : REJETÉES -->
+<div id="rejetees" class="tab-content" style="display:none;">
+    <h3>Dépenses rejetées</h3>
+
+    {% if rejetees|length == 0 %}
+        <p>Aucune dépense rejetée.</p>
+    {% else %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Description</th>
+                    <th>Montant</th>
+                    <th>Statut</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for d in rejetees %}
+                <tr>
+                    <td>{{ d.id }}</td>
+                    <td>{{ d.description }}</td>
+                    <td>{{ d.montant }} FCFA</td>
+                    <td>{{ d.statut }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</div>
+
+<script>
+function openTab(tab) {
+    document.querySelectorAll('.tab-content').forEach(div => div.style.display = 'none');
+    document.getElementById(tab).style.display = 'block';
+}
+</script>
+
+{% endblock %}

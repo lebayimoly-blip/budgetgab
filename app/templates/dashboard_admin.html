@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Tableau de Bord Administrateur</h2>
+
+<div class="card">
+    <div class="card-header">
+        <div>
+            <div class="card-title">Actions Administrateur</div>
+            <div class="card-subtitle">Gestion et supervision globale</div>
+        </div>
+    </div>
+
+    <div class="admin-actions">
+        {% if user.role == "admin" %}
+            <a href="/budgets/create" class="btn btn-primary">➕ Créer un budget</a>
+            <a href="/budgets/list" class="btn btn-info">📊 Voir tous les budgets</a>
+            <a href="/dashboard/admin/controle" class="btn btn-warning">🕵️ Contrôle des dépenses</a>
+            <a href="/dashboard/depenses" class="btn btn-secondary">📋 Toutes les dépenses</a>
+            <a href="/rapports/pdf" class="btn btn-success">📄 Export PDF</a>
+            <a href="/rapports/excel" class="btn btn-success">📊 Export Excel</a>
+            <a href="/dashboard/logs" class="btn btn-outline-primary">📝 Journalisation</a>
+            <a href="/users/logout" class="btn btn-danger">🚪 Déconnexion</a>
+        {% endif %}
+    </div>
+</div>
+
+<br>
+
+<div class="card">
+    <div class="card-header">
+        <div>
+            <div class="card-title">Statistiques Globales</div>
+            <div class="card-subtitle">Vue d’ensemble des dépenses</div>
+        </div>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card green">
+            <h3>{{ validees }}</h3>
+            <p>Dépenses validées</p>
+        </div>
+
+        <div class="stat-card yellow">
+            <h3>{{ en_attente }}</h3>
+            <p>En attente</p>
+        </div>
+
+        <div class="stat-card red">
+            <h3>{{ rejetees }}</h3>
+            <p>Rejetées</p>
+        </div>
+
+        <div class="stat-card blue">
+            <h3>{{ total }}</h3>
+            <p>Dépenses saisies</p>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

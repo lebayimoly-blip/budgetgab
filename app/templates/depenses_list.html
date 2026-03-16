@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Liste des Dépenses</h2>
+
+<div class="card">
+    <div class="card-header">
+        <div>
+            <div class="card-title">Dépenses enregistrées</div>
+            <div class="card-subtitle">Vue globale des dépenses avec factures et statut</div>
+        </div>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Description</th>
+                <th>Montant</th>
+                <th>Budget lié</th>
+                <th>Utilisateur</th>
+                <th>Facture</th>
+                <th>Statut</th>
+                <th>Commentaire</th>
+                <th>Date création</th>
+                <th>Date validation</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for d in depenses %}
+            <tr>
+                <td>{{ d.id }}</td>
+                <td>{{ d.description }}</td>
+                <td>{{ d.montant }} FCFA</td>
+                <td>{{ d.budget_id }}</td>
+                <td>{{ d.user.username if d.user else "-" }}</td>
+
+                <td>
+                    {% if d.facture %}
+                        <a href="/uploads/{{ d.facture.fichier | replace('app/uploads/', '') }}" target="_blank">Voir facture</a>
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+
+                <td>{{ d.statut }}</td>
+
+                <td>
+                    {% if d.statut in ["validé_controleur", "rejeté_controleur"] %}
+                        {{ d.commentaire_controleur or "-" }}
+                    {% elif d.statut in ["approuvé_admin", "rejeté_admin"] %}
+                        {{ d.commentaire_admin or "-" }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+
+                <td>{{ d.date_creation.strftime('%d/%m/%Y %H:%M') if d.date_creation else "-" }}</td>
+                <td>{{ d.date_validation or "-" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

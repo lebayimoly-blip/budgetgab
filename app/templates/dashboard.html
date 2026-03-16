@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Tableau de bord</h2>
+
+<div class="card">
+    <div class="card-header">
+        <div>
+            <div class="card-title">Vue d’ensemble</div>
+            <div class="card-subtitle">Budgets, dépenses et engagements</div>
+        </div>
+    </div>
+
+    <p>Bienvenue dans votre espace institutionnel de gestion budgétaire.</p>
+
+    <br>
+
+    {% if user.role == "agent" %}
+        <a href="/depenses/form" class="btn-link">Ajouter une dépense</a>
+    {% endif %}
+</div>
+
+<br>
+
+<div class="card">
+    <div class="card-header">
+        <div>
+            <div class="card-title">Accès rapide</div>
+            <div class="card-subtitle">Fonctionnalités selon votre rôle</div>
+        </div>
+    </div>
+
+    <div class="dashboard-links">
+
+        {% if user.role == "agent" %}
+            <a href="/dashboard/agent" class="btn-link">Mes dépenses</a>
+        {% endif %}
+
+        {% if user.role == "controleur" or user.role == "admin" %}
+            <a href="/dashboard/controleur" class="btn-link">Contrôle des dépenses</a>
+        {% endif %}
+
+        {% if user.role == "admin" %}
+            <a href="/dashboard/admin" class="btn-link">Statistiques administrateur</a>
+        {% endif %}
+
+    </div>
+</div>
+
+{% endblock %}

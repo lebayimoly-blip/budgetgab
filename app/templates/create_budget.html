@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Créer un Budget</h2>
+
+<div class="card">
+    <div class="card-header">
+        <div>
+            <div class="card-title">Nouveau Budget</div>
+            <div class="card-subtitle">Réservé aux administrateurs</div>
+        </div>
+    </div>
+
+    <form method="post">
+    <label for="nom">Nom du budget</label>
+    <input type="text" id="nom" name="nom" required>
+
+    <label for="montant">Montant total</label>
+    <input type="number" id="montant" name="montant" required>
+
+    <label for="departement">Département</label>
+    <input type="text" id="departement" name="departement">
+
+    <label for="projet">Projet</label>
+    <input type="text" id="projet" name="projet">
+
+    <label for="prevision">Prévision budgétaire</label>
+    <input type="number" id="prevision" name="prevision">
+
+    <button type="submit">Créer le budget</button>
+</form>
+
+</div>
+
+{% endblock %}

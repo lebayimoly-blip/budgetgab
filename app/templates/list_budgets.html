@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Liste des Budgets</h2>
+
+<!-- ✅ Bloc CSS pour colorer les lignes selon le statut -->
+<style>
+    .status-green td {
+        background-color: #d4edda; /* vert clair */
+        color: #155724;           /* texte vert foncé */
+    }
+    .status-orange td {
+        background-color: #fff3cd; /* orange clair */
+        color: #856404;            /* texte orange foncé */
+    }
+    .status-red td {
+        background-color: #f8d7da; /* rouge clair */
+        color: #721c24;            /* texte rouge foncé */
+    }
+</style>
+
+<div class="card">
+    <div class="card-header">
+        <div>
+            <div class="card-title">Budgets enregistrés</div>
+            <div class="card-subtitle">Vue globale des budgets disponibles</div>
+        </div>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nom du budget</th>
+                <th>Département</th>
+                <th>Projet</th>
+                <th>Prévision</th>
+                <th>Montant total</th>
+                <th>Dépenses réelles</th>
+                <th>Dernière dépense</th>
+                <th>Montant restant</th>
+                <th>Écart</th>
+                <th>Statut</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for b in budgets %}
+            <tr class="status-{{ b.alert_class }}">
+                <td>{{ b.id }}</td>
+                <td>{{ b.nom }}</td>
+                <td>{{ b.departement }}</td>
+                <td>{{ b.projet }}</td>
+                <td>{{ b.prevision }} FCFA</td>
+                <td>{{ b.montant }} FCFA</td>
+                <td>{{ b.montant - b.restant }} FCFA</td>
+                <td>{{ b.derniere_depense }} FCFA</td>
+                <td>{{ b.restant }} FCFA</td>
+                <td>
+                    {% if b.ecart is not none %}
+                        {{ b.ecart }} FCFA
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                <td>{{ b.pourcentage }} %</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

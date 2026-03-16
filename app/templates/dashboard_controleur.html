@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Contrôle des Dépenses</h2>
+
+<div class="card">
+    <div class="card-header">
+        <div>
+            <div class="card-title">Dépenses en attente</div>
+            <div class="card-subtitle">Liste des opérations à valider ou rejeter</div>
+        </div>
+    </div>
+
+    {% if depenses|length == 0 %}
+        <p>Aucune dépense en attente.</p>
+
+        <!-- Statistiques globales -->
+        <div class="stats-grid">
+            <div class="stat-card green">
+                <h3>{{ validees }}</h3>
+                <p>Dépenses validées</p>
+            </div>
+            <div class="stat-card red">
+                <h3>{{ rejetees }}</h3>
+                <p>Dépenses rejetées</p>
+            </div>
+            <div class="stat-card yellow">
+                <h3>{{ en_attente }}</h3>
+                <p>En attente</p>
+            </div>
+            <div class="stat-card blue">
+                <h3>{{ total }}</h3>
+                <p>Total des dépenses</p>
+            </div>
+        </div>
+
+        <!-- Historique des actions -->
+        <div class="history">
+            <h4>Historique récent</h4>
+            {% if logs|length == 0 %}
+                <p>Aucune action récente.</p>
+            {% else %}
+                <ul>
+                    {% for action in logs %}
+                        <li>{{ action.date }} – {{ action.type }} (Dépense #{{ action.depense_id }})</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+
+        <!-- Budgets actifs -->
+        <div class="budgets">
+            <h4>Budgets actifs</h4>
+            {% if budgets|length == 0 %}
+                <p>Aucun budget actif.</p>
+            {% else %}
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Montant initial</th>
+                            <th>Montant consommé</th>
+                            <th>Solde restant</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for b in budgets %}
+                        <tr>
+                            <td>{{ b.nom }}</td>
+                            <td>{{ b.montant_initial }} FCFA</td>
+                            <td>{{ b.montant_consomme }} FCFA</td>
+                            <td>{{ b.solde }} FCFA</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        </div>
+
+    {% else %}
+        <!-- Tableau des dépenses en attente -->
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Description</th>
+                    <th>Montant</th>
+                    <th>Facture</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for d in depenses %}
+                <tr>
+                    <td>{{ d.id }}</td>
+                    <td>{{ d.description }}</td>
+                    <td>{{ d.montant }} FCFA</td>
+                    <td>
+                        {% if d.facture %}
+                            <a href="/uploads/{{ d.facture.fichier | replace('app/uploads/', '') }}" target="_blank">Voir facture</a>
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td>
+                        <form action="/depenses/valider/{{ d.id }}" method="post" style="display:inline;">
+                            <input type="text" name="commentaire" placeholder="Commentaire (optionnel)" />
+                            <button type="submit" class="btn btn-success">Valider</button>
+                        </form>
+                        <form action="/depenses/rejeter/{{ d.id }}" method="post" style="display:inline;">
+                            <input type="text" name="commentaire" placeholder="Motif du rejet" required />
+                            <button type="submit" class="btn btn-danger">Rejeter</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</div>
+
+{% endblock %}

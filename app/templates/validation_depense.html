@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="form-card card">
+
+    <div class="card-header">
+        <div>
+            <div class="card-title">Validation de la dépense #{{ depense.id }}</div>
+            <div class="card-subtitle">Contrôle institutionnel</div>
+        </div>
+    </div>
+
+    <p><strong>Description :</strong> {{ depense.description }}</p>
+    <p><strong>Montant :</strong> {{ depense.montant }} FCFA</p>
+    <p><strong>Facture :</strong> <a href="/{{ depense.facture.fichier }}" target="_blank">Voir la facture</a></p>
+
+    <form action="/depenses/valider/{{ depense.id }}" method="post">
+        <label>Commentaire du contrôleur</label>
+        <input type="text" name="commentaire">
+        <button type="submit">Valider la dépense</button>
+    </form>
+
+    <br>
+
+    <form action="/depenses/rejeter/{{ depense.id }}" method="post">
+        <label>Motif du rejet</label>
+        <input type="text" name="commentaire" required>
+        <button type="submit" class="btn-danger">Rejeter la dépense</button>
+    </form>
+
+</div>
+
+{% endblock %}
