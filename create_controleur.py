@@ -3,7 +3,7 @@ import requests
 url = "http://127.0.0.1:8000/users/register"
 
 data = {
-    "username": "controleur_test",
+    "username": "Mathurin MENGUE",
     "password": "SecurePass123!",
     "role": "controleur"
 }
